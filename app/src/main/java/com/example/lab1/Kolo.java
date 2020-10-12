@@ -7,8 +7,13 @@ public class Kolo extends Figura {
 
     public Kolo(double wymiar) {
         super(wymiar);
-        super.setCecha(wymiar * 2);
-        super.setPole(wymiar * wymiar * Math.PI);
+        double cecha = wymiar * 2;
+        double pole = wymiar * wymiar * Math.PI;
+        super.setCecha(cecha);
+        super.setPole(pole);
+        super.liczbaKol++;
+        super.sumaCechKol += cecha;
+        super.sumaPolKol += pole;
     }
 
     @Override

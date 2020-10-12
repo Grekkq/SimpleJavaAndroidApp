@@ -6,8 +6,13 @@ import android.util.Log;
 public class Kwadrat extends Figura {
     public Kwadrat(double wymiar) {
         super(wymiar);
-        super.setCecha(wymiar * Math.sqrt(2));
-        super.setPole(wymiar * wymiar);
+        double cecha = wymiar * Math.sqrt(2);
+        double pole = wymiar * wymiar;
+        super.setCecha(cecha);
+        super.setPole(pole);
+        super.liczbaKwadratow++;
+        super.sumaCechKwadratow += cecha;
+        super.sumaPolKwwadratow += pole;
     }
 
     @Override
