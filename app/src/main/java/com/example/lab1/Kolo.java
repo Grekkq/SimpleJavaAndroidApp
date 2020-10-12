@@ -11,9 +11,9 @@ public class Kolo extends Figura {
         double pole = wymiar * wymiar * Math.PI;
         super.setCecha(cecha);
         super.setPole(pole);
-        super.liczbaKol++;
-        super.sumaCechKol += cecha;
-        super.sumaPolKol += pole;
+        liczbaKol++;
+        sumaCechKol += cecha;
+        sumaPolKol += pole;
     }
 
     @Override

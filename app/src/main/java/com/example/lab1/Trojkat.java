@@ -11,9 +11,9 @@ public class Trojkat extends Figura {
         double pole = wymiar * wymiar * Math.sqrt(3) / 4;
         super.setCecha(cecha);
         super.setPole(pole);
-        super.liczbaTrojkatow++;
-        super.sumaCechTrojkatow += cecha;
-        super.sumaPolTrojkatow += pole;
+        liczbaTrojkatow++;
+        sumaCechTrojkatow += cecha;
+        sumaPolTrojkatow += pole;
     }
 
     @Override

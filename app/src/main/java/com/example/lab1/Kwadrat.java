@@ -10,9 +10,9 @@ public class Kwadrat extends Figura {
         double pole = wymiar * wymiar;
         super.setCecha(cecha);
         super.setPole(pole);
-        super.liczbaKwadratow++;
-        super.sumaCechKwadratow += cecha;
-        super.sumaPolKwwadratow += pole;
+        liczbaKwadratow++;
+        sumaCechKwadratow += cecha;
+        sumaPolKwadratow += pole;
     }
 
     @Override

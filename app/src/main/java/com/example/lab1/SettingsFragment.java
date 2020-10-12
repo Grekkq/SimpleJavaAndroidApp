@@ -13,10 +13,12 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Objects;
+
 public class SettingsFragment extends Fragment {
-    int countOfFigures;
-    double bottomLimit;
-    double topLimit;
+    final int countOfFigures;
+    final double bottomLimit;
+    final double topLimit;
     EditText countInput;
     EditText bottomLimitInput;
     EditText topLimitInput;
@@ -44,10 +46,11 @@ public class SettingsFragment extends Fragment {
         topLimitInput.setText(String.valueOf(topLimit));
         Button clickButton = (Button) view.findViewById(R.id.saveSettingsButton);
         // Zapisz opcje po kliknięciu przycisku
-        clickButton.setOnClickListener( new View.OnClickListener() {
+        clickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).dispatchSettings(Integer.valueOf(countInput.getText().toString()), Double.valueOf(bottomLimitInput.getText().toString()), Double.valueOf(topLimitInput.getText().toString()));
+                ((MainActivity) Objects.requireNonNull(getActivity(), "Nie udało się znaleźć klasy MainActivity, nie można zapisać ustawień 😕"))
+                        .dispatchSettings(Integer.parseInt(countInput.getText().toString()), Double.parseDouble(bottomLimitInput.getText().toString()), Double.parseDouble(topLimitInput.getText().toString()));
                 Snackbar.make(view, "Zmiany zapisane", Snackbar.LENGTH_LONG).show();
             }
         });

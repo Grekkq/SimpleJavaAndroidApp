@@ -14,6 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/colorPrimary"
             android:text="Figura" />
 
         <Button
@@ -21,6 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/colorPrimary"
             android:text="Pole" />
 
         <Button
@@ -28,6 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/colorPrimary"
             android:text="Cecha" />
     </LinearLayout>
 

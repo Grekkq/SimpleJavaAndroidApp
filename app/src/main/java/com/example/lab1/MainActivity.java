@@ -14,6 +14,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -21,9 +22,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Boczny panel
     private DrawerLayout drawer;
     // Lista do której będziemy dodawać nowe figury
-    private List<Figura> listaFigur = new LinkedList<>();
+    final private List<Figura> listaFigur = new LinkedList<>();
     // Inicjalizacja generatora liczb losowych
-    private Random generator = new Random();
+    final private Random generator = new Random();
     // Któy ekran jest aktualnie pokazywany
     private ActiveFragment activeFragment = ActiveFragment.Main;
     // Ustawienia
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Ustawienia paska
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Figures");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Figures");
         // W teorii te dwie linie powinny mieć taki sam efekt jak ta na dole ale z jakeigoś powodu one powodują crasha po kliknięciu na przycisk
 //        drawer = (DrawerLayout) new DrawerLayout(this);
 //        drawer.findViewById(R.id.drawer_layout);
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_statistics:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new StatisticsFragment(listaFigur.get(0))).commit();
+                        new StatisticsFragment()).commit();
                 activeFragment = ActiveFragment.Statistics;
                 break;
             case R.id.nav_add:
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             new MainFragment(listaFigur)).commit();
                 if (activeFragment == ActiveFragment.Statistics)
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new StatisticsFragment(listaFigur.get(0 ))).commit();
+                            new StatisticsFragment()).commit();
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);

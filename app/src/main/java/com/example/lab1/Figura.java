@@ -10,13 +10,13 @@ public abstract class Figura {
     public static int liczbaKwadratow = 0;
     public static int liczbaKol = 0;
     public static int liczbaTrojkatow = 0;
-    public static double sumaPolKwwadratow = 0;
+    public static double sumaPolKwadratow = 0;
     public static double sumaPolKol = 0;
     public static double sumaPolTrojkatow = 0;
     public static double sumaCechKwadratow = 0;
     public static double sumaCechKol = 0;
     public static double sumaCechTrojkatow = 0;
-    DecimalFormat df = new DecimalFormat("0.000");
+    final DecimalFormat df = new DecimalFormat("0.000");
     public Figura(double wymiar) {
         this.wymiar = wymiar;
     }
