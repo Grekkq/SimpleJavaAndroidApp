@@ -2,7 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menuList"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_main"
             android:icon="@drawable/ic_list"
@@ -15,9 +17,34 @@
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_settings"
             android:title="Statystyki" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_info"
+            android:title="Informacje o programie" />
     </group>
-    <item
-        android:id="@+id/nav_add"
-        android:icon="@drawable/ic_add"
-        android:title="Wygeneruj nowe figury"/>
+
+    <group android:id="@+id/adding_options">
+        <item
+            android:id="@+id/nav_add"
+            android:icon="@drawable/ic_add"
+            android:title="Wygeneruj losowe figury" />
+
+        <item
+            android:id="@+id/nav_add_single"
+            android:icon="@drawable/ic_add"
+            android:title="Dodaj losową figurę" />
+    </group>
+
+    <group android:id="@+id/deleting_options">
+        <item
+            android:id="@+id/nav_delete_all"
+            android:icon="@drawable/ic_remove"
+            android:title="Wyczyść figury" />
+
+        <item
+            android:id="@+id/nav_delete_and_generate"
+            android:icon="@drawable/ic_regenerate"
+            android:title="Wyczyść i wygeneruj ponownie figury" />
+    </group>
+
 </menu>

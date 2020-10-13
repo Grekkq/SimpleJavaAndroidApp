@@ -4,30 +4,21 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
-
 public class SettingsFragment extends Fragment {
-    final int countOfFigures;
-    final double bottomLimit;
-    final double topLimit;
     EditText countInput;
     EditText bottomLimitInput;
     EditText topLimitInput;
-
-    public SettingsFragment(int countOfFigures, double bottomLimit, double topLimit) {
-        this.countOfFigures = countOfFigures;
-        this.bottomLimit = bottomLimit;
-        this.topLimit = topLimit;
-    }
 
     @Nullable
     @Override
@@ -38,20 +29,33 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        final SharedViewModel model = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         countInput = (EditText) view.findViewById(R.id.figuresCountInput);
         bottomLimitInput = (EditText) view.findViewById(R.id.bottomLimitInput);
         topLimitInput = (EditText) view.findViewById(R.id.upperLimitInput);
-        countInput.setText(String.valueOf(countOfFigures));
-        bottomLimitInput.setText(String.valueOf(bottomLimit));
-        topLimitInput.setText(String.valueOf(topLimit));
         Button clickButton = (Button) view.findViewById(R.id.saveSettingsButton);
+
+        // Ustaw obecne wartości na start
+        countInput.setText(String.valueOf(model.getIloscGenerowanychFigur()));
+        bottomLimitInput.setText(String.valueOf(model.getDolnaGranicaWymiaru()));
+        topLimitInput.setText(String.valueOf(model.getGornaGranicaPrzedzialu()));
+
         // Zapisz opcje po kliknięciu przycisku
         clickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) Objects.requireNonNull(getActivity(), "Nie udało się znaleźć klasy MainActivity, nie można zapisać ustawień 😕"))
-                        .dispatchSettings(Integer.parseInt(countInput.getText().toString()), Double.parseDouble(bottomLimitInput.getText().toString()), Double.parseDouble(topLimitInput.getText().toString()));
-                Snackbar.make(view, "Zmiany zapisane", Snackbar.LENGTH_LONG).show();
+                String message = "";
+                try {
+                    model.setIloscGenerowanychFigur(Integer.parseInt(countInput.getText().toString()));
+                    model.setDolnaGranicaWymiaru(Double.parseDouble(bottomLimitInput.getText().toString()));
+                    model.setGornaGranicaPrzedzialu(Double.parseDouble(topLimitInput.getText().toString()));
+                    message = "Zmiany zapisane";
+                } catch (final NumberFormatException e) {
+                    message = "Upewnij się że wypełniłeś wszyzstkie pola";
+                }
+                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show();
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         });
 

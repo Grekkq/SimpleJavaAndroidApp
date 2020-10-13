@@ -24,26 +24,27 @@ public class StatisticsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DecimalFormat df = new DecimalFormat("0.000");
+        DecimalFormat bigDf = new DecimalFormat("0.0E0");
         // Ilość
         TextView squareCountText = (TextView) view.findViewById(R.id.squareCountText);
-        squareCountText.setText(String.valueOf(Figura.liczbaKwadratow));
+        squareCountText.setText(Figura.wypiszLiczbaKwadratow());
         TextView circleCountText = (TextView) view.findViewById(R.id.circleCountText);
-        circleCountText.setText(String.valueOf(Figura.liczbaKol));
+        circleCountText.setText(Figura.wypiszLiczbaKol());
         TextView triangleCountText = (TextView) view.findViewById(R.id.triangleCountText);
-        triangleCountText.setText(String.valueOf(Figura.liczbaTrojkatow));
+        triangleCountText.setText(Figura.wypiszLiczbaTrojkatow());
         // Pola
         TextView squareAreaText = (TextView) view.findViewById(R.id.squareAreaText);
-        squareAreaText.setText(df.format(Figura.sumaPolKwadratow));
+        squareAreaText.setText(Figura.wypiszSumaPolKwadratow());
         TextView circleAreaText = (TextView) view.findViewById(R.id.circleAreaText);
-        circleAreaText.setText(df.format(Figura.sumaPolKol));
+        circleAreaText.setText(Figura.wypiszSumaPolKol());
         TextView triangleAreaText = (TextView) view.findViewById(R.id.triangleAreaText);
-        triangleAreaText.setText(df.format(Figura.sumaPolTrojkatow));
+        triangleAreaText.setText(Figura.wypiszSumaPolTrojkatow());
         // Cechy
         TextView squareFeatureText = (TextView) view.findViewById(R.id.squareFeatureText);
-        squareFeatureText.setText(df.format(Figura.sumaCechKwadratow));
+        squareFeatureText.setText(Figura.wypiszSumaCechKwadratow());
         TextView circleFeatureText = (TextView) view.findViewById(R.id.circleFeatureText);
-        circleFeatureText.setText(df.format(Figura.sumaCechKol));
+        circleFeatureText.setText(Figura.wypiszSumaCechKol());
         TextView triangleFeatureText = (TextView) view.findViewById(R.id.triangleFeatureText);
-        triangleFeatureText.setText(df.format(Figura.sumaCechTrojkatow));
+        triangleFeatureText.setText(Figura.wypiszSumaCechTrojkatow());
     }
 }

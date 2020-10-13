@@ -8,11 +8,34 @@ public class Kwadrat extends Figura {
         super(wymiar);
         double cecha = wymiar * Math.sqrt(2);
         double pole = wymiar * wymiar;
-        super.setCecha(cecha);
-        super.setPole(pole);
+        setCecha(cecha);
+        setPole(pole);
         liczbaKwadratow++;
         sumaCechKwadratow += cecha;
         sumaPolKwadratow += pole;
+    }
+
+    @Override
+    public Figura skopiuj() {
+        return new Kwadrat(this.getWymiar());
+    }
+
+    @Override
+    public void zamknij() {
+        liczbaKwadratow--;
+        sumaCechKwadratow -= getCecha();
+        sumaPolKwadratow -= getPole();
+    }
+
+    @Override
+    public void zmienWymiar(double wymiar) {
+        sumaCechKwadratow -= getCecha();
+        sumaPolKwadratow -= getPole();
+        setWymiar(wymiar);
+        setCecha(wymiar * Math.sqrt(2));
+        setPole(wymiar * wymiar);
+        sumaCechKwadratow += getCecha();
+        sumaPolKwadratow += getPole();
     }
 
     @Override

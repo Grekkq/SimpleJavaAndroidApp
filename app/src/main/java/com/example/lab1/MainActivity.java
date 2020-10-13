@@ -9,37 +9,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // Boczny panel
     private DrawerLayout drawer;
-    // Lista do której będziemy dodawać nowe figury
-    final private List<Figura> listaFigur = new LinkedList<>();
-    // Inicjalizacja generatora liczb losowych
-    final private Random generator = new Random();
     // Któy ekran jest aktualnie pokazywany
-    private ActiveFragment activeFragment = ActiveFragment.Main;
-    // Ustawienia
-    int howManyFiguresGenerate = 10;
-    double dimensionBottomLimit = 0.1;
-    double dimensionTopLimit = 1;
+//    private ActiveFragment activeFragment = ActiveFragment.Main;
+    // Klasa z danymi dostępnymi pomiędzy fragmentami
+    private SharedViewModel model;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // Ustawienia paska
+        // Ustawienia appBar'a
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Figures");
+        // Inicjazlzuje klasę która przetrwa obrót ekranu :D
+        model = new ViewModelProvider(this).get(SharedViewModel.class);
         // W teorii te dwie linie powinny mieć taki sam efekt jak ta na dole ale z jakeigoś powodu one powodują crasha po kliknięciu na przycisk
 //        drawer = (DrawerLayout) new DrawerLayout(this);
 //        drawer.findViewById(R.id.drawer_layout);
@@ -47,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.getMenu().getItem(0).setChecked(true);
         navigationView.setNavigationItemSelectedListener(this);
 
         // Dodanie ikonki do otwierania drawera na pasku
@@ -54,46 +48,88 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         // Automatyczny obrót żeby dostosować się przy obracaniu ekranu
         toggle.syncState();
-        // Generacja figur w sposób losowy
-        generateNewFigures(howManyFiguresGenerate, dimensionBottomLimit, dimensionTopLimit);
 
-        // Wypisanie figur przy budowaniu widoku
-        for (Figura figura : listaFigur)
-            figura.wypisz();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new MainFragment(listaFigur)).commit();
+        switch (model.aktywnyWidok) {
+            case Main:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new MainFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Lista figur");
+                break;
+            case Settings:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new SettingsFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Ustawienia");
+                break;
+            case Statistics:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new StatisticsFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Statystyki");
+                break;
+            case Info:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new InfoFragment()).commit();
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Informacje o programie");
+                break;
+        }
     }
 
     // Akcje wywoływane po naciśnięciu przycisków w panelu bocznym
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
+        int selectedItem = menuItem.getItemId();
+        switch (selectedItem) {
             case R.id.nav_main:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new MainFragment(listaFigur)).commit();
-                activeFragment = ActiveFragment.Main;
+                        new MainFragment()).commit();
+                model.aktywnyWidok = ActiveFragment.Main;
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Lista figur");
                 break;
             case R.id.nav_settings:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new SettingsFragment(howManyFiguresGenerate, dimensionBottomLimit, dimensionTopLimit)).commit();
-                activeFragment = ActiveFragment.Settings;
+                        new SettingsFragment()).commit();
+                model.aktywnyWidok = ActiveFragment.Settings;
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Ustawienia");
                 break;
             case R.id.nav_statistics:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new StatisticsFragment()).commit();
-                activeFragment = ActiveFragment.Statistics;
+                model.aktywnyWidok = ActiveFragment.Statistics;
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Statystyki");
+                break;
+            case R.id.nav_info:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new InfoFragment()).commit();
+                model.aktywnyWidok = ActiveFragment.Info;
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Informacje o programie");
                 break;
             case R.id.nav_add:
-                generateNewFigures(howManyFiguresGenerate, dimensionBottomLimit, dimensionTopLimit);
-                if (activeFragment == ActiveFragment.Main)
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new MainFragment(listaFigur)).commit();
-                if (activeFragment == ActiveFragment.Statistics)
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            new StatisticsFragment()).commit();
+                model.dodajFigury();
+                break;
+            case R.id.nav_add_single:
+                model.dodajFigure();
+                break;
+            case R.id.nav_delete_all:
+                model.wyczyscFigury();
+                break;
+            case R.id.nav_delete_and_generate:
+                model.wygenerujPonownieFigury();
                 break;
         }
+        // Jeśli był update listy zaktualizuj widok
+        ArrayList<Integer> arr = new ArrayList<Integer>(4);
+        arr.add(R.id.nav_add);
+        arr.add(R.id.nav_add_single);
+        arr.add(R.id.nav_delete_all);
+        arr.add(R.id.nav_delete_and_generate);
+        if (arr.contains(selectedItem)) {
+            if (model.aktywnyWidok == ActiveFragment.Main)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new MainFragment()).commit();
+            if (model.aktywnyWidok == ActiveFragment.Statistics)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new StatisticsFragment()).commit();
+        }
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -105,33 +141,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         else
             super.onBackPressed();
-    }
-
-    void generateNewFigures(int howMany, double bottomLimit, double topLimit) {
-        for (int i = 0; i < howMany; i++)
-            switch (generator.nextInt(3)) {
-                case 0:
-                    listaFigur.add(new Kwadrat(ThreadLocalRandom.current().nextDouble(bottomLimit, topLimit)));
-                    break;
-                case 1:
-                    listaFigur.add(new Kolo(ThreadLocalRandom.current().nextDouble(bottomLimit, topLimit)));
-                    break;
-                case 2:
-                    listaFigur.add(new Trojkat(ThreadLocalRandom.current().nextDouble(bottomLimit, topLimit)));
-                    break;
-            }
-    }
-
-    public void dispatchSettings(int count, double bottom, double top) {
-        this.howManyFiguresGenerate = count;
-        if (bottom <= 0)
-            this.dimensionBottomLimit = 0.1;
-        else
-            this.dimensionBottomLimit = bottom;
-        if (top < bottom)
-            this.dimensionTopLimit = bottom + 1;
-        else
-            this.dimensionTopLimit = top;
     }
 
 }

@@ -4,4 +4,5 @@ public enum ActiveFragment {
     Main,
     Settings,
     Statistics,
+    Info,
 }
